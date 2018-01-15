@@ -1,0 +1,91 @@
+
+ext {
+
+    //spring libs
+    springVersion = '5.0.2.RELEASE'
+    hornetqVersion = '2.4.0.Final'
+    slf4jVersion = '1.7.25'
+    derbyVersion = '10.13.1.1'
+
+    jmsVersion = '2.0'
+    httpclientVersion = '4.5.3'
+    artemisVersion='2.4.0'
+
+
+    //persistency libraries
+
+    spring = [
+            context 			: "org.springframework:spring-context:$springVersion",
+            web            		: "org.springframework:spring-web:$springVersion",
+            webmvc            	: "org.springframework:spring-webmvc:$springVersion",
+            jdbc              	: "org.springframework:spring-jdbc:$springVersion",
+            contextSupport    	: "org.springframework:spring-context-support:$springVersion",
+            jms               	: "org.springframework:spring-jms:$springVersion",
+    ]
+
+    db = [
+            derby : "org.apache.derby:derby:$derbyVersion",
+    ]
+
+    web = [
+            //			tiles        : "org.apache.tiles:tiles-jsp:$tilesVersion",
+            jstl         : "jstl:jstl:1.2",
+            httpclient   : "org.apache.httpcomponents:httpclient:$httpclientVersion",
+            //			websocket    : "javax.websocket:javax.websocket-api:1.1",
+            servlet      : "javax.servlet:javax.servlet-api:3.1.0",
+    ]
+
+    misc = [
+            slf4j       	: "org.slf4j:slf4j-log4j12:$slf4jVersion",
+            log4j			: "log4j:log4j:1.2.17",
+            jms            	: "javax.jms:javax.jms-api:$jmsVersion",
+            Hornetq         : "org.hornetq:hornetq-jms-client:$hornetqVersion",
+            artemis         : "org.apache.activemq:artemis-jms-server:$artemisVersion"
+
+    ]
+
+
+}
+
+
+group 'uce.edu.bautista'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile spring.context
+    compile spring.jdbc
+    compile spring.web
+    compile spring.webmvc
+    compile spring.jms
+    compile misc.jms
+    compile misc.slf4j
+    compile misc.Hornetq
+    compile misc.artemis
+    compile db.derby
+    compile web.servlet
+    
+    //para cliente
+    compile group: 'com.sun.faces', name: 'jsf-impl', version: '2.2.15'
+    compile group: 'com.sun.faces', name: 'jsf-api', version: '2.2.15'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+war {
+    archiveName = 'Alexis_Bautista_Examen.war'
+    manifest {
+        attributes("Created-By"      : "Alexis Bautista",
+                "Specification-Title": "Programacion Distribuida",
+                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+    }
+
+//	webXml = file('src/main/java/web.xml')
+}
